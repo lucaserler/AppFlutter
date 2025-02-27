@@ -1,10 +1,10 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:greengrocer/src/pages/common_widgets/app_name_widget.dart';
 import 'package:greengrocer/src/pages/common_widgets/custom_text_field.dart';
 import 'package:greengrocer/src/pages/auth/sign_up_screen.dart';
 import 'package:greengrocer/src/pages/base/base_screen.dart';
 import 'package:greengrocer/src/config/custom_colors.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -25,27 +25,9 @@ class SignInScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     //NOME DO APP
-                    Text.rich(
-                      TextSpan(
-                          style: const TextStyle(
-                            fontSize: 50,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: 'Green',
-                              style: GoogleFonts.satisfy(
-                                color: CustomColors.customContrastColorNomeApp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            TextSpan(
-                              text: 'grocer',
-                              style: GoogleFonts.bigshotOne(
-                                color: CustomColors.customContrastColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ]),
+                    AppNameWidget(
+                      greenTileColor: CustomColors.customContrastColorNomeApp,
+                      textSize: 40,
                     ),
                     //CATEGORIA
                     SizedBox(
