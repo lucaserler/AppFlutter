@@ -11,6 +11,9 @@ class CustonTextField extends StatefulWidget {
   final bool readOnly;
   final List<TextInputFormatter>? inputFormatters;
 
+  final String? Function(String?)? validator;
+  final TextEditingController? controller;
+
   const CustonTextField({
     super.key,
     required this.icon,
@@ -19,6 +22,8 @@ class CustonTextField extends StatefulWidget {
     this.initialValue,
     this.readOnly = false,
     this.inputFormatters,
+    required this.validator,
+    this.controller,
   });
 
   @override
@@ -39,6 +44,8 @@ class _CustonTextFieldState extends State<CustonTextField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
+        controller: widget.controller,
+        validator: widget.validator,
         readOnly: widget.readOnly,
         initialValue: widget.initialValue,
         inputFormatters: widget.inputFormatters,

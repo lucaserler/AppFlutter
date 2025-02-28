@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:greengrocer/src/pages/common_widgets/custom_text_field.dart';
 import 'package:greengrocer/src/config/custom_colors.dart';
@@ -55,22 +56,49 @@ class SignUpScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        CustonTextField(icon: Icons.email, label: 'Email'),
+                        CustonTextField(
+                          icon: Icons.email,
+                          label: 'Email',
+                          validator: (email) {
+                            if (email == null || email.isEmpty) {
+                              return 'Digite seu email!';
+                            }
+                            if (!email.isEmail) {
+                              return 'Digite um email valido!';
+                            }
+                            return null;
+                          },
+                        ),
                         CustonTextField(
                           icon: Icons.password,
                           label: 'Senha',
                           isSecret: true,
+                          validator: (password) {
+                            if (password == null || password.isEmpty) {
+                              return 'Digite sua senha!';
+                            }
+                            if (password.length < 7) {
+                              return 'Digite uma senha com pelo menos 7 caracteres!';
+                            }
+                            return null;
+                          },
                         ),
-                        CustonTextField(icon: Icons.person, label: 'Nome'),
+                        CustonTextField(
+                          icon: Icons.person,
+                          label: 'Nome',
+                          validator: (null),
+                        ),
                         CustonTextField(
                           icon: Icons.phone,
                           label: 'Celular',
                           inputFormatters: [phoneFormatter],
+                          validator: (null),
                         ),
                         CustonTextField(
                           icon: Icons.file_copy,
                           label: 'CPF',
                           inputFormatters: [cpfFormatter],
+                          validator: (null),
                         ),
                         SizedBox(
                           height: 50,

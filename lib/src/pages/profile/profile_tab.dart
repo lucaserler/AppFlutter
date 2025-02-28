@@ -61,6 +61,7 @@ class _ProfileTabState extends State<ProfileTab> {
             initialValue: app_data.user.email,
             icon: Icons.email,
             label: 'Email',
+            validator: (null),
           ),
           //Nome
           CustonTextField(
@@ -68,6 +69,7 @@ class _ProfileTabState extends State<ProfileTab> {
             initialValue: app_data.user.name,
             icon: Icons.person,
             label: 'Nome',
+            validator: (null),
           ),
           //Celular
           CustonTextField(
@@ -75,6 +77,7 @@ class _ProfileTabState extends State<ProfileTab> {
             initialValue: app_data.user.phone,
             icon: Icons.phone,
             label: 'Celular',
+            validator: (null),
           ),
           //CPF
           CustonTextField(
@@ -83,6 +86,7 @@ class _ProfileTabState extends State<ProfileTab> {
             icon: Icons.file_copy,
             label: 'CPF',
             isSecret: true,
+            validator: (null),
           ),
           //Botão atualizar senha
           SizedBox(
@@ -142,18 +146,21 @@ class _ProfileTabState extends State<ProfileTab> {
                       isSecret: true,
                       icon: Icons.lock,
                       label: 'Senha atual',
+                      validator: (null),
                     ),
                     //Nova senha
                     CustonTextField(
                       isSecret: true,
                       icon: Icons.lock_outline,
                       label: 'Nova senha',
+                      validator: (null),
                     ),
                     //Confirmação nova senha
                     CustonTextField(
                       isSecret: true,
                       icon: Icons.lock_outline,
                       label: 'Confirmar nova senha',
+                      validator: (null),
                     ),
                     //Botão de confirmação
                     SizedBox(
