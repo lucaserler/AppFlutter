@@ -19,6 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Get.find<AuthController>().validateToken();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Material(
       child: Container(
