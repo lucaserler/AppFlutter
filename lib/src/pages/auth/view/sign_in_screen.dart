@@ -2,10 +2,13 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:greengrocer/src/pages/auth/controller/auth_controller.dart';
+import 'package:greengrocer/src/pages/auth/view/components/forgot_password_dialog.dart';
 import 'package:greengrocer/src/pages/common_widgets/app_name_widget.dart';
 import 'package:greengrocer/src/pages/common_widgets/custom_text_field.dart';
 import 'package:greengrocer/src/config/custom_colors.dart';
 import 'package:greengrocer/src/pages/splash/pages_routes/app_pages.dart';
+import 'package:greengrocer/src/services/utils_services.dart';
+import 'package:greengrocer/src/services/validators.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -13,6 +16,7 @@ class SignInScreen extends StatelessWidget {
   //Controlador de campos
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final utilsServices = UtilsServices();
 
   @override
   Widget build(BuildContext context) {
@@ -77,35 +81,20 @@ class SignInScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         //EMAIL
-                        CustonTextField(
+                        CustomTextField(
+                          textInputType: TextInputType.emailAddress,
                           controller: emailController,
                           icon: Icons.email,
                           label: 'Email',
-                          validator: (email) {
-                            if (email == null || email.isEmpty) {
-                              return 'Digite seu email!';
-                            }
-                            if (!email.isEmail) {
-                              return 'Digite um email valido!';
-                            }
-                            return null;
-                          },
+                          validator: emailValidator,
                         ),
                         //SENHA
-                        CustonTextField(
+                        CustomTextField(
                           controller: passwordController,
                           icon: Icons.password,
                           label: 'Senha',
                           isSecret: true,
-                          validator: (password) {
-                            if (password == null || password.isEmpty) {
-                              return 'Digite sua senha!';
-                            }
-                            if (password.length < 7) {
-                              return 'Digite uma senha com pelo menos 7 caracteres!';
-                            }
-                            return null;
-                          },
+                          validator: passwordValidator,
                         ),
                         //BOTÃO ENTRAR
                         SizedBox(
@@ -132,10 +121,8 @@ class SignInScreen extends StatelessWidget {
                                               passwordController.text;
                                           authController.signIn(
                                               email: email, password: password);
-                                        } else {
-                                          print('Campos não validos!');
                                         }
-                                        //Get.toNamed(PagesRoutes.baseRoute);
+                                        Get.toNamed(PagesRoutes.baseRoute);
                                       },
                                 child: authController.isLoading.value
                                     ? CircularProgressIndicator()
@@ -151,7 +138,22 @@ class SignInScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final bool? result = await showDialog(
+                                context: context,
+                                builder: (_) {
+                                  return ForgotPasswordDialog(
+                                    email: emailController.text,
+                                  );
+                                },
+                              );
+                              if (result ?? false) {
+                                utilsServices.showToast(
+                                  message:
+                                      'O link de recuperação foi enviado para o seu email!',
+                                );
+                              }
+                            },
                             child: Text(
                               'Esqueceu a senha?',
                               style: TextStyle(

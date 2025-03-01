@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:greengrocer/src/config/custom_colors.dart';
+import 'package:greengrocer/src/pages/auth/controller/auth_controller.dart';
 import 'package:greengrocer/src/pages/common_widgets/custom_text_field.dart';
 import 'package:greengrocer/src/config/app_data.dart' as app_data;
 
@@ -12,13 +14,17 @@ class ProfileTab extends StatefulWidget {
 }
 
 class _ProfileTabState extends State<ProfileTab> {
+  final authController = Get.find<AuthController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              authController.signOut();
+            },
             icon: Icon(
               Icons.logout,
             ),
@@ -56,7 +62,7 @@ class _ProfileTabState extends State<ProfileTab> {
         padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
         children: [
           //Email
-          CustonTextField(
+          CustomTextField(
             readOnly: true,
             initialValue: app_data.user.email,
             icon: Icons.email,
@@ -64,7 +70,7 @@ class _ProfileTabState extends State<ProfileTab> {
             validator: (null),
           ),
           //Nome
-          CustonTextField(
+          CustomTextField(
             readOnly: true,
             initialValue: app_data.user.name,
             icon: Icons.person,
@@ -72,7 +78,7 @@ class _ProfileTabState extends State<ProfileTab> {
             validator: (null),
           ),
           //Celular
-          CustonTextField(
+          CustomTextField(
             readOnly: true,
             initialValue: app_data.user.phone,
             icon: Icons.phone,
@@ -80,7 +86,7 @@ class _ProfileTabState extends State<ProfileTab> {
             validator: (null),
           ),
           //CPF
-          CustonTextField(
+          CustomTextField(
             readOnly: true,
             initialValue: app_data.user.cpf,
             icon: Icons.file_copy,
@@ -142,21 +148,21 @@ class _ProfileTabState extends State<ProfileTab> {
                       ),
                     ),
                     //Senha atual
-                    CustonTextField(
+                    CustomTextField(
                       isSecret: true,
                       icon: Icons.lock,
                       label: 'Senha atual',
                       validator: (null),
                     ),
                     //Nova senha
-                    CustonTextField(
+                    CustomTextField(
                       isSecret: true,
                       icon: Icons.lock_outline,
                       label: 'Nova senha',
                       validator: (null),
                     ),
                     //Confirmação nova senha
-                    CustonTextField(
+                    CustomTextField(
                       isSecret: true,
                       icon: Icons.lock_outline,
                       label: 'Confirmar nova senha',

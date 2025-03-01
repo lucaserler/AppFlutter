@@ -16,9 +16,13 @@ class AuthController extends GetxController {
 
   //@override
   //void onInit() {
-    //super.onInit();
-    //validateToken();
+  //super.onInit();
+  //validateToken();
   //}
+
+  Future<void> resetPassword(String email) async {
+    await authRepository.resetPassword(email);
+  }
 
   Future<void> validateToken() async {
     //Recuperação do token salvo localmente
@@ -55,9 +59,29 @@ class AuthController extends GetxController {
     Get.offAllNamed(PagesRoutes.baseRoute);
   }
 
+  Future<void> signUp() async {
+    isLoading.value = true;
+
+    AuthResult result = await authRepository.signUp(user);
+
+    isLoading.value = false;
+    result.when(
+      success: (user) {
+        this.user = user;
+        saveTokenAndPreceedToBase();
+      },
+      error: (message) {
+        utilsServices.showToast(
+          message: message,
+          isError: true,
+        );
+      },
+    );
+  }
+
   Future<void> signIn({required String email, required String password}) async {
     isLoading.value = true;
-    //await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 2));
     AuthResult result =
         await authRepository.signIn(email: email, password: password);
     isLoading.value = false;

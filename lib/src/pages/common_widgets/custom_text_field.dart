@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:greengrocer/src/config/custom_colors.dart';
 
-class CustonTextField extends StatefulWidget {
+class CustomTextField extends StatefulWidget {
   final IconData icon;
   final String label;
   final bool isSecret;
@@ -12,9 +12,15 @@ class CustonTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
 
   final String? Function(String?)? validator;
+  final void Function(String?)? onSaved;
+
   final TextEditingController? controller;
 
-  const CustonTextField({
+  final TextInputType? textInputType;
+
+  final GlobalKey<FormFieldState>? formFieldKey;
+
+  const CustomTextField({
     super.key,
     required this.icon,
     required this.label,
@@ -24,13 +30,16 @@ class CustonTextField extends StatefulWidget {
     this.inputFormatters,
     required this.validator,
     this.controller,
+    this.textInputType,
+    this.onSaved,
+    this.formFieldKey,
   });
 
   @override
-  State<CustonTextField> createState() => _CustonTextFieldState();
+  State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
-class _CustonTextFieldState extends State<CustonTextField> {
+class _CustomTextFieldState extends State<CustomTextField> {
   bool isObscure = false;
 
   @override
@@ -44,8 +53,11 @@ class _CustonTextFieldState extends State<CustonTextField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
+        key: widget.formFieldKey,
+        keyboardType: widget.textInputType,
         controller: widget.controller,
         validator: widget.validator,
+        onSaved: widget.onSaved,
         readOnly: widget.readOnly,
         initialValue: widget.initialValue,
         inputFormatters: widget.inputFormatters,
