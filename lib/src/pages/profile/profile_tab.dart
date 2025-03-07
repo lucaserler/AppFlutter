@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:greengrocer/src/config/custom_colors.dart';
 import 'package:greengrocer/src/pages/auth/controller/auth_controller.dart';
 import 'package:greengrocer/src/pages/common_widgets/custom_text_field.dart';
-import 'package:greengrocer/src/config/app_data.dart' as app_data;
+import 'package:greengrocer/src/services/validators.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
@@ -64,7 +64,7 @@ class _ProfileTabState extends State<ProfileTab> {
           //Email
           CustomTextField(
             readOnly: true,
-            initialValue: app_data.user.email,
+            initialValue: authController.user.email,
             icon: Icons.email,
             label: 'Email',
             validator: (null),
@@ -72,7 +72,7 @@ class _ProfileTabState extends State<ProfileTab> {
           //Nome
           CustomTextField(
             readOnly: true,
-            initialValue: app_data.user.name,
+            initialValue: authController.user.name,
             icon: Icons.person,
             label: 'Nome',
             validator: (null),
@@ -80,7 +80,7 @@ class _ProfileTabState extends State<ProfileTab> {
           //Celular
           CustomTextField(
             readOnly: true,
-            initialValue: app_data.user.phone,
+            initialValue: authController.user.phone,
             icon: Icons.phone,
             label: 'Celular',
             validator: (null),
@@ -88,7 +88,7 @@ class _ProfileTabState extends State<ProfileTab> {
           //CPF
           CustomTextField(
             readOnly: true,
-            initialValue: app_data.user.cpf,
+            initialValue: authController.user.cpf,
             icon: Icons.file_copy,
             label: 'CPF',
             isSecret: true,
@@ -120,6 +120,9 @@ class _ProfileTabState extends State<ProfileTab> {
   }
 
   Future<bool?> updatePassword() {
+    final currentPasswordController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
     return showDialog(
       context: context,
       builder: (context) {
@@ -131,62 +134,88 @@ class _ProfileTabState extends State<ProfileTab> {
             children: [
               Padding(
                 padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    //Titulo
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      //Titulo
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                        ),
+                        child: Text(
+                          'Atualização de senha',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      child: Text(
-                        'Atualização de senha',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                      //Senha atual
+                      CustomTextField(
+                        controller: currentPasswordController,
+                        isSecret: true,
+                        icon: Icons.lock,
+                        label: 'Senha atual',
+                        validator: passwordValidator,
                       ),
-                    ),
-                    //Senha atual
-                    CustomTextField(
-                      isSecret: true,
-                      icon: Icons.lock,
-                      label: 'Senha atual',
-                      validator: (null),
-                    ),
-                    //Nova senha
-                    CustomTextField(
-                      isSecret: true,
-                      icon: Icons.lock_outline,
-                      label: 'Nova senha',
-                      validator: (null),
-                    ),
-                    //Confirmação nova senha
-                    CustomTextField(
-                      isSecret: true,
-                      icon: Icons.lock_outline,
-                      label: 'Confirmar nova senha',
-                      validator: (null),
-                    ),
-                    //Botão de confirmação
-                    SizedBox(
-                      height: 45,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            foregroundColor:
-                                CustomColors.customContrastColorNomeApp,
-                            side: BorderSide(
-                              width: 2,
-                              color: CustomColors.customContrastColorNomeApp,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                      //Nova senha
+                      CustomTextField(
+                        controller: newPasswordController,
+                        isSecret: true,
+                        icon: Icons.lock_outline,
+                        label: 'Nova senha',
+                        validator: passwordValidator,
+                      ),
+                      //Confirmação nova senha
+                      CustomTextField(
+                        isSecret: true,
+                        icon: Icons.lock_outline,
+                        label: 'Confirmar nova senha',
+                        validator: (password) {
+                          final result = passwordValidator(password);
+                          if (result != null) {
+                            return result;
+                          }
+                          if (password != newPasswordController.text) {
+                            return 'A confirmação da nova senha e diferente';
+                          }
+                          return null;
+                        },
+                      ),
+                      //Botão de confirmação
+                      SizedBox(
+                        height: 45,
+                        child: Obx(() => ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  foregroundColor:
+                                      CustomColors.customContrastColorNomeApp,
+                                  side: BorderSide(
+                                    width: 2,
+                                    color:
+                                        CustomColors.customContrastColorNomeApp,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  )),
+                              onPressed: authController.isLoading.value
+                                  ? null
+                                  : () {
+                                      if (_formKey.currentState!.validate()) {
+                                        authController.changePassword(
+                                          currentPassword: currentPasswordController.text,
+                                          newPassword: newPasswordController.text,
+                                        );
+                                      }
+                                    },
+                              child: authController.isLoading.value
+                                  ? CircularProgressIndicator()
+                                  : Text('Atualizar'),
                             )),
-                        onPressed: () {},
-                        child: Text('Atualizar'),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Positioned(

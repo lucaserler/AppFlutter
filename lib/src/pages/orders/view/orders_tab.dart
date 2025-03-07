@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:greengrocer/src/config/app_data.dart' as add_data;
 import 'package:greengrocer/src/config/custom_colors.dart';
-import 'package:greengrocer/src/pages/orders/components/orders_tile.dart';
+import 'package:greengrocer/src/pages/orders/controller/all_orders_controller.dart';
+import 'package:greengrocer/src/pages/orders/view/components/orders_tile.dart';
 
 class OrdersTab extends StatelessWidget {
   const OrdersTab({super.key});
@@ -38,12 +39,17 @@ class OrdersTab extends StatelessWidget {
           ),
         ),
       ),
-      body: ListView.separated(
-        padding: EdgeInsets.all(16),
-        physics: BouncingScrollPhysics(),
-        separatorBuilder: (_, index) => SizedBox(height: 10),
-        itemBuilder: (_, index) => OrdersTile(order: add_data.orders[index]),
-        itemCount: add_data.orders.length,
+      body: GetBuilder<AllOrdersController>(
+        builder: (controller) {
+          return ListView.separated(
+            padding: EdgeInsets.all(16),
+            physics: BouncingScrollPhysics(),
+            separatorBuilder: (_, index) => SizedBox(height: 10),
+            itemBuilder: (_, index) =>
+                OrdersTile(order: controller.allOrders[index]),
+            itemCount: controller.allOrders.length,
+          );
+        },
       ),
     );
   }
